@@ -75,3 +75,6 @@ packages/desktop/resources/macos-window-bounds/
 __pycache__/
 *.pyc
 .zcode-runtime
+
+# 本地构建工具链（JDK / Android SDK / Gradle 缓存），不随仓库分发
+_toolchain/
