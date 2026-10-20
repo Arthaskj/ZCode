@@ -44,16 +44,15 @@ jobs:
 
       # build.gradle.kts 用 compileSdk { release(36) { minorApiLevel = 1 } }，
       # 需要 minor 版本 android-36.1；buildToolsVersion 固定 36.1.0。
+      # 注意：setup-android 的 packages 默认值是 "tools"，该包已从 SDK 仓库移除，
+      # 必须显式覆盖，否则 action 在安装阶段直接失败。
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
-
-      - name: Install SDK packages
-        run: |
-          sdkmanager --install \
-            "platforms;android-36.1" \
-            "build-tools;36.1.0" \
-            "platform-tools"
-          yes | sdkmanager --licenses > /dev/null || true
+        with:
+          # 默认 12266719 对应较旧的 cmdline-tools，无法解析 android-36.1 这个
+          # minor 平台包；固定到 13114758（cmdline-tools 19.x）。
+          cmdline-tools-version: "13114758"
+          packages: "platforms;android-36.1 build-tools;36.1.0 platform-tools"
 
       - name: Verify toolchain
         run: |
